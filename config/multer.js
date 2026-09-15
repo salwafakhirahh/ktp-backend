@@ -1,0 +1,23 @@
+// config/multer.js
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if (file.fieldname === 'foto') {
+      cb(null, path.join(__dirname, '../uploads/foto'));
+    } else if (file.fieldname === 'signature') {
+      cb(null, path.join(__dirname, '../uploads/signature'));
+    }
+  },
+  filename: (req, file, cb) => {
+    const unique = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, unique + path.extname(file.originalname));
+  }
+});
+
+export const upload = multer({ storage });
